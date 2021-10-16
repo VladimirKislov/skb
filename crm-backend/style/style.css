@@ -61,6 +61,7 @@ img {
 }
 
 body {
+  font-family: 'Open_Sans';
   background-color: #f5f5f5;
 }
 
@@ -79,7 +80,6 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 1024px;
   padding: 20px;
   margin: 0 auto;
 }
@@ -100,7 +100,7 @@ body {
 
 .td__id {
   width: 100%;
-  max-width: 86px;
+  max-width: 98px;
   padding-left: 18px;
 }
 
@@ -114,14 +114,14 @@ body {
 
 .hero {
   width: 100%;
-  max-width: 1024px;
+  max-width: 1226px;
   margin: 0 auto;
   padding: 44px 20px 39px;
 }
 
 .hero__title {
   margin: 0;
-  margin-bottom: 9px;
+  margin-bottom: 25px;
   font-size: 24px;
   font-weight: 700;
   color: #333333;
@@ -129,7 +129,7 @@ body {
 
 .hero__table {
   width: 100%;
-  max-width: 984px;
+  max-width: 1186px;
   margin: 0 auto;
   margin-bottom: 8px;
 }
@@ -147,7 +147,7 @@ body {
 .table__contact {
   position: relative;
   width: 100%;
-  max-width: 984px;
+  max-width: 1186px;
   height: 300px;
   margin: 0 auto;
   background-color: #FFFFFF;
@@ -213,17 +213,29 @@ body {
   color: #FFFFFF;
 }
 
+.arrow {
+  position: absolute;
+  top: -17px;
+  display: none;
+  width: 14px;
+  height: 14px;
+  background-color: #333333;
+  transform: matrix(-0.71, -0.71, -0.71, 0.71, 0, 0);
+}
+.wrapper__icon:hover .arrow,
 .wrapper__icon:hover .tooltip {
   display: flex;
 }
 
 .key {
   margin-right: 3px;
+  z-index: 1;
 }
 
 .value {
   font-weight: 700;
   color: #9873FF;
+  z-index: 1;
 }
 
 /* add-modal */
@@ -250,33 +262,65 @@ body {
   display: flex;
   flex-direction: column;
   width: 450px;
-  height: 100%;
-  max-height: 400px;
-  padding: 20px 30px 29px 30px;
+  padding: 26px 30px 29px 30px;
   background-color: #FFFFFF;
-  overflow-y: auto;
 }
 
 .add__client-form {
   display: flex;
   flex-direction: column;
-  margin-bottom: 25px;
+  margin-bottom: 12px;
 }
 
 .new-client__title {
   margin: 0;
-  margin-bottom: 28px;
+  margin-bottom: 22px;
   font-size: 18px;
   font-weight: 700;
 }
 
 .input {
-  margin-bottom: 32px;
-  padding: 4px 0;
+  margin-bottom: 20px;
+  padding: 2px 0;
   border: none;
   border-bottom: 1px solid #C8C5D1;
   font-size: 14px;
+  font-weight: 600;
+}
+
+.input__middle-name {
+  margin-bottom: 28px;
+}
+
+.label__name,
+.label__surname,
+.label__middle-name {
+  font-size: 14px;
   font-weight: 400;
+  color: #B0B0B0;
+  transform: translateY(15px);
+  transform-origin: left top;
+  cursor: text;
+  transition: all 0.3s;
+}
+
+.label-span {
+  color: #9873FF;
+}
+
+.form-floating {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+input:focus ~ label {
+  padding: 0;
+  transform:  translateY(7px) scale(0.8);
+}
+
+.floating__label {
+  padding: 0;
+  transform:  translateY(7px) scale(0.8);
 }
 
 .wrapper__contact {
@@ -596,7 +640,6 @@ body {
 .row {
   display: flex;
   flex-direction: row;
-  /* justify-content: space-between; */
   align-items: center;
   width: 100%;
   height: 59px;
@@ -607,6 +650,9 @@ body {
 }
 
 .table__id {
+  width: 100%;
+  max-width: 90px;
+  padding-left: 18px;
   font-size: 12px;
   font-weight: 400;
   color: #B0B0B0;
@@ -614,13 +660,15 @@ body {
 
 .table__name {
   width: 100%;
-  max-width: 220px;
+  max-width: 370px;
+  padding-left: 10px;
   font-size: 14px;
   font-weight: 400;
   color: #333333;
 }
 
 .table__created {
+  width: 100%;
   max-width: 140px;
   padding-left: 10px;
   font-size: 14px;
@@ -634,7 +682,8 @@ body {
 }
 
 .table__update {
-  max-width: 157px;
+  width: 100%;
+  max-width: 186px;
   padding-left: 40px;
   font-size: 14px;
   font-weight: 400;
@@ -643,8 +692,9 @@ body {
 
 .table__contact-client {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  min-width: 130px;
+  width: 148px;
   padding-left: 30px;
 }
 
@@ -652,8 +702,9 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: 100%;
   max-width: 210px;
-  padding-left: 44px;
+  padding-left: 36px;
   height: 60px;
 }
 
@@ -739,8 +790,6 @@ body {
   display: flex;
   flex-direction: column;
   width: 450px;
-  height: 100%;
-  max-height: 400px;
   padding: 20px 30px 29px 30px;
   background-color: #FFFFFF;
   overflow-y: auto;
@@ -925,8 +974,9 @@ body {
 
 .full__name {
   display: flex;
-  align-items: center;
-  width: 234px;
+  align-items: baseline;
+  width: 100%;
+  max-width: 371px;
 }
 
 .full__name:hover {
@@ -938,7 +988,7 @@ body {
 }
 
 .create__data {
-  max-width: 157px;
+  max-width: 177px;
   padding-right: 30px;
 }
 
@@ -951,8 +1001,8 @@ body {
 }
 
 .change {
-  max-width: 147px;
-  padding-right: 30px;
+  max-width: 175px;
+  padding-right: 28px;
 }
 
 .change:hover {
@@ -965,7 +1015,7 @@ body {
 
 .contact {
   width: 100%;
-  max-width: 150px;
+  max-width: 159px;
 }
 
 .sort__text {
@@ -1021,10 +1071,12 @@ body {
   border-bottom: 1px solid #F06A4D;
 }
 
-.is-close {
+.is-close,
+.is-close-change,
+.is-close-delete {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 40px;
+  bottom: 0px;
   left: 0;
   right: 0;
   z-index: 1;
@@ -1059,6 +1111,57 @@ body {
   cursor: pointer;
 }
 
+.show-scroll {
+  height: 640px;
+  overflow-y: scroll;
+}
+
+@media (max-width:1210px) {
+
+  .hero__title {
+    margin-bottom: 9px;
+  }
+
+  .td__id {
+    max-width: 86px;
+  }
+
+  .full__name {
+    max-width: 234px;
+  }
+
+  .create__data {
+    max-width: 157px;
+  }
+
+  .change {
+    max-width: 147px;
+    padding-right: 30px;
+  }
+
+  .contact {
+    max-width: 150px;
+  }
+
+  .table__created {
+    max-width: 133px;
+  }
+
+  .table__update {
+    max-width: 151px;
+    padding-left: 34px;
+  }
+
+  .table__name {
+    max-width: 222px;
+    padding-left: 0;
+  }
+
+  .table__action {
+    padding-left: 25px;
+  }
+}
+
 @media (max-width:1000px) {
 
   .table__name {
@@ -1079,15 +1182,33 @@ body {
 
   .table__action {
     flex-wrap: wrap;
-    padding-left: 20px;
+    padding-left: 10px;
+    max-width: 115px;
   }
 
   .table__change-btn {
     margin: 0;
   }
 
-  .td__id {
+  .td__id, .table__id {
     max-width: 77px;
+  }
+
+  .table__name {
+    max-width: 213px;
+  }
+
+  .table__created {
+    max-width: 80px;
+  }
+
+  .table__update {
+    max-width: 90px;
+  }
+
+  .table__contact-client {
+    width: 148px;
+    padding-left: 32px;
   }
 
   .full__name {
