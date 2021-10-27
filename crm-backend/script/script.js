@@ -1,14 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
   let arrContacts = [];
+  const container = document.querySelector('.container');
 
-  function createApp() {
-    const container = document.querySelector('.container');
-
-    //create header
-    const header = document.createElement('div');
-    header.classList.add('header');
+  //create header
+  function createHeader() {
     const headerContainer = document.createElement('div');
     headerContainer.classList.add('header__container');
+    const header = document.createElement('div');
+    header.classList.add('header');
     const logo = document.createElement('img');
     logo.classList.add('header__logo');
     logo.setAttribute('src', 'img/skb.jpg');
@@ -20,14 +19,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const listSearch = document.createElement('ul');
     listSearch.classList.add('list__search');
 
-    container.append(headerContainer);
-    headerContainer.append(header);
     header.append(logo);
     header.append(formSearch);
     formSearch.append(input);
     formSearch.append(listSearch);
 
-    //create table
+    return {
+      headerContainer,
+      header
+    }
+  }
+
+
+  //create table
+  function createTable() {
     const hero = document.createElement('div');
     hero.classList.add('hero');
     const heroContainer = document.createElement('div');
@@ -40,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const tr = document.createElement('tr');
     tr.classList.add('tr');
     const thId = document.createElement('td');
-    thId.classList.add('td__id');
+    thId.classList.add('sort', 'td__id');
     const vector1 = document.createElement('img');
     vector1.classList.add('vector', 'vector1');
     vector1.setAttribute('src', 'img/Vector.png');
@@ -48,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     thId.setAttribute('data-id', '1');
     thId.textContent = 'ID';
     const fullName = document.createElement('td');
-    fullName.classList.add('full__name');
+    fullName.classList.add('sort', 'full__name');
     fullName.textContent = 'Фамилия Имя Отчество';
     const vector2 = document.createElement('img');
     vector2.classList.add('vector', 'vector2');
@@ -59,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fullName.setAttribute('data-id', '1');
     fullName.setAttribute('tabindex', '0');
     const createData = document.createElement('td');
-    createData.classList.add('create__data');
+    createData.classList.add('sort', 'create__data');
     createData.textContent = 'Дата и время создания';
     const vector3 = document.createElement('img');
     vector3.classList.add('vector', 'vector3');
@@ -67,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
     createData.setAttribute('data-id', '1');
     createData.setAttribute('tabindex', '0');
     const change = document.createElement('td');
-    change.classList.add('change');
+    change.classList.add('sort', 'change');
     change.textContent = 'Последние изменения';
     const vector4 = document.createElement('img');
     vector4.classList.add('vector', 'vector4');
@@ -84,8 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const tableContact = document.createElement('table');
     tableContact.classList.add('table__contact');
 
-    container.append(heroContainer);
-    heroContainer.append(hero);
     hero.append(title);
     hero.append(table);
     hero.append(tableContact);
@@ -102,7 +105,15 @@ document.addEventListener('DOMContentLoaded', function () {
     tr.append(contact);
     tr.append(action);
 
-    //create button
+    return {
+      heroContainer,
+      hero,
+    }
+  }
+
+
+  //create button
+  function createButton() {
     const button = document.createElement('button');
     button.classList.add('btn__add-client');
     button.textContent = 'Добавить клиента';
@@ -110,10 +121,17 @@ document.addEventListener('DOMContentLoaded', function () {
     img.classList.add('btn__img');
     img.setAttribute('src', 'img/btn.png');
 
-    container.append(button);
     button.append(img);
 
-    //create add-client modal
+    return {
+      button,
+    }
+
+  }
+
+
+  //create add-client modal
+  function createAddModal() {
     const addClientModal = document.createElement('div');
     addClientModal.classList.add('add__client-modal');
     const wrapperAddModal = document.createElement('div');
@@ -183,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const textError = document.createElement('p');
     textError.classList.add('text-error');
 
-    container.append(addClientModal);
     addClientModal.append(wrapperAddModal);
     wrapperAddModal.append(newClient);
     wrapperAddModal.append(addClientModalForm);
@@ -209,7 +226,14 @@ document.addEventListener('DOMContentLoaded', function () {
     wrapperBtn.append(addClientSave);
     wrapperBtn.append(addClientCancel);
 
-    //create delete-client modal
+    return {
+      addClientModal,
+    }
+  }
+
+
+  //create delete-client modal
+  function createDeleteModal() {
     const deleteClientModal = document.createElement('div');
     deleteClientModal.classList.add('delete__client-modal');
     const wrapperDeleteModal = document.createElement('div');
@@ -232,7 +256,6 @@ document.addEventListener('DOMContentLoaded', function () {
     deleteClientCancel.classList.add('delete__client-cancel');
     deleteClientCancel.textContent = 'Отмена';
 
-    container.append(deleteClientModal);
     deleteClientModal.append(wrapperDeleteModal);
     wrapperDeleteModal.append(deleteClientInfo);
     wrapperDeleteModal.append(deleteClientClose);
@@ -241,7 +264,13 @@ document.addEventListener('DOMContentLoaded', function () {
     deleteClientInfo.append(deleteClientBtn);
     deleteClientInfo.append(deleteClientCancel);
 
-    //create change modal
+    return {
+      deleteClientModal,
+    }
+  }
+
+  //create change modal
+  function createChange() {
     const changeClientModal = document.createElement('div');
     changeClientModal.classList.add('change__client-modal');
     const wrapperChangeModal = document.createElement('div');
@@ -292,7 +321,6 @@ document.addEventListener('DOMContentLoaded', function () {
     changeClientModal.append(wrapperChangeModal);
     wrapperChangeModal.append(changeClient);
     changeClient.append(changeSpan);
-
     wrapperChangeModal.append(changeClientModalForm);
     wrapperChangeModal.append(changeWrapperBtn);
     wrapperChangeModal.append(changeClientClose);
@@ -307,18 +335,45 @@ document.addEventListener('DOMContentLoaded', function () {
     changeContactBtn.append(changeContactImg);
     changeWrapperBtn.append(changeClientSave);
     changeWrapperBtn.append(changeClientCancel);
+
+    return {
+      changeClientModal,
+    }
+  }
+
+  function createApp() {
+    const { headerContainer, header } = createHeader();
+    const { heroContainer, hero } = createTable();
+    const { button } = createButton();
+    const { addClientModal } = createAddModal();
+    const { deleteClientModal } = createDeleteModal();
+    const { changeClientModal } = createChange();
+
+    container.append(headerContainer);
+    headerContainer.append(header);
+    container.append(heroContainer);
+    heroContainer.append(hero);
+    container.append(button);
+    container.append(addClientModal);
+    container.append(deleteClientModal);
+    container.append(changeClientModal);
   }
   createApp();
+
 
   //show modal
   function showAddModal() {
     document.querySelector('.add__client-modal').classList.add('add__client-modal-visible');
+    document.querySelector('.add__contact-save').addEventListener('click', function () {
+      saveContact();
+    })
   }
 
-  document.querySelector('.btn__add-client').addEventListener('click', (eve) => {
+  document.querySelector('.btn__add-client').addEventListener('click', () => {
     showAddModal();
     animationAddClient();
   });
+
 
   document.querySelector('.add__contact-btn').addEventListener('click', function () {
     createDataClient();
@@ -357,7 +412,6 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!element.target.parentNode.parentNode.querySelector('.client__data')) {
         document.querySelector('.wrapper__contact').classList.remove('wrapper__contact-active');
       }
-      window.location.reload();
     }
 
   });
@@ -411,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   //create change data client
-  function createChangeDataClient() {
+  function createChangeDataClient(type, val) {
     const wrapperContact = document.querySelector('.wrapper__contact-change');
 
     const clientData = document.createElement('div');
@@ -420,7 +474,7 @@ document.addEventListener('DOMContentLoaded', function () {
     wrapperSelect.classList.add('wrapper__select');
     const selectData = document.createElement('div');
     selectData.classList.add('select__data');
-    selectData.textContent = 'Телефон';
+    selectData.textContent = type;
     const dataList = document.createElement('ul');
     dataList.classList.add('data__list');
     const dataItemPhone = document.createElement('li');
@@ -440,6 +494,7 @@ document.addEventListener('DOMContentLoaded', function () {
     dataItemOther.textContent = 'Другое';
     const inputData = document.createElement('input');
     inputData.classList.add('input__data');
+    inputData.value = val;
     const dataBtn = document.createElement('div');
     dataBtn.classList.add('change-data__btn');
     dataBtn.setAttribute('tabindex', '0');
@@ -457,6 +512,12 @@ document.addEventListener('DOMContentLoaded', function () {
     clientData.append(inputData);
     clientData.append(dataBtn);
     dataBtn.append(dataImg);
+
+    document.querySelectorAll('.change-data__btn').forEach(function (item) {
+      item.addEventListener('click', function () {
+        item.parentElement.remove();
+      })
+    })
   }
 
   //show select
@@ -494,18 +555,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let data = await response.json();
     return data;
   }
-  loadFetchClient();
 
   //show table
   function showTable() {
     const data = loadFetchClient();
     data.then(response => {
-      response.forEach(function (elem) {
-        createTableData(elem);
-      })
-      windowLoad();
-      createChangeModal();
-      deleteClient();
+      if (response.length > 0) {
+        createTableData(response);
+      } else {
+        windowLoad();
+        deleteClient();
+      }
     })
   }
   showTable();
@@ -519,8 +579,8 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   }
 
-  //event button save contact (send in server)
-  document.querySelector('.add__contact-save').addEventListener('click', function (eve) {
+  //save contact (send in server)
+  function saveContact() {
     let inputName = document.querySelector('.input__name');
     let inputSurName = document.querySelector('.input__surname');
     let inputMiddleName = document.querySelector('.input__middle-name');
@@ -550,7 +610,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     } else if (addContact) {
       arrayDataInput();
-      console.log(arrayData);
       if (arrayData.length === inputData.length) {
         if (arrayData.includes("")) {
           textError.innerHTML = 'Контакт не заполнен';
@@ -558,19 +617,20 @@ document.addEventListener('DOMContentLoaded', function () {
           arrayData = [];
         } else {
           createFetchClient();
-          isClose();
+          const wrapperAdd = document.querySelector('.wrapper__add-modal');
+          isClose(wrapperAdd);
         }
       }
     } else {
       createFetchClient();
-      isClose();
+      const wrapperAdd = document.querySelector('.wrapper__add-modal');
+      isClose(wrapperAdd);
     }
-  });
+  }
 
   //request server
   function createDataContacts() {
     document.querySelectorAll('.select__data').forEach(function (elem) {
-      console.log(elem.parentElement.childNodes[2].value)
       let obj = {
         type: `${elem.textContent}`,
         value: `${elem.parentElement.childNodes[2].value}`
@@ -584,288 +644,276 @@ document.addEventListener('DOMContentLoaded', function () {
     const surName = document.querySelector('.input__surname').value;
     const name = document.querySelector('.input__name').value;
     const middleName = document.querySelector('.input__middle-name').value;
-    let dataClient = createDataContacts();
+    const dataClient = createDataContacts();
+    const id = '';
     setTimeout(function () {
-      fetch('http://localhost:3000/api/clients', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: `${name}`,
-          surname: `${surName}`,
-          lastName: `${middleName}`,
-          contacts: dataClient,
-        })
-      })
+      fetchClient(id, 'POST', name, surName, middleName, dataClient);
     }, 1000);
   }
 
-  function createTableData(e) {
-    const container = document.querySelector('.table__contact');
+  function createTableData(el) {
+    el.forEach(function (e) {
+      const container = document.querySelector('.table__contact');
 
-    const tr = document.createElement('tr');
-    tr.classList.add('row');
-    const idClient = document.createElement('td');
-    idClient.classList.add('table__id');
-    idClient.setAttribute('data-id', `${e.id}`);
-    idClient.textContent = e.id.substr(-6, 13);
-    const tdFullName = document.createElement('td');
-    tdFullName.classList.add('table__name');
-    tdFullName.textContent = `${e.surname} ${e.name} ${e.lastName}`;
-    const tdCreated = document.createElement('td');
-    tdCreated.classList.add('table__created');
-    const createDateYear = e.createdAt;
-    let createMonth = createDateYear.substr(5, 2);
-    let createDay = createDateYear.substr(8, 2);
-    let createYear = createDateYear.substr(0, 4);
-    let newCreateDateYear = `${createDay}.${createMonth}.${createYear}`;
-    tdCreated.textContent = `${newCreateDateYear} `;
-    let createDateTime = e.createdAt.substr(11, 5);
-    const tdCreatedTime = document.createElement('span');
-    tdCreatedTime.classList.add('time');
-    tdCreatedTime.textContent = `${createDateTime}`;
-    const tdUpDate = document.createElement('td');
-    tdUpDate.classList.add('table__update');
-    const upDateYear = e.updatedAt;
-    let changeMonth = upDateYear.substr(5, 2);
-    let changeDay = upDateYear.substr(8, 2);
-    let changeYear = upDateYear.substr(0, 4);
-    let newUpDateYear = `${changeDay}.${changeMonth}.${changeYear}`;
-    tdUpDate.textContent = `${newUpDateYear} `;
-    let upDateTime = e.updatedAt.substr(11, 5);
-    const spanTime = document.createElement('span');
-    spanTime.classList.add('time');
-    spanTime.textContent = `${upDateTime}`;
+      const tr = document.createElement('tr');
+      tr.classList.add('row');
+      const idClient = document.createElement('td');
+      idClient.classList.add('table__id');
+      idClient.setAttribute('data-id', `${e.id}`);
+      idClient.textContent = e.id.substr(-6, 13);
+      const tdFullName = document.createElement('td');
+      tdFullName.classList.add('table__name');
+      tdFullName.textContent = `${e.surname} ${e.name} ${e.lastName}`;
+      const tdCreated = document.createElement('td');
+      tdCreated.classList.add('table__created');
+      const createDateYear = e.createdAt;
+      let createMonth = createDateYear.substr(5, 2);
+      let createDay = createDateYear.substr(8, 2);
+      let createYear = createDateYear.substr(0, 4);
+      let newCreateDateYear = `${createDay}.${createMonth}.${createYear}`;
+      tdCreated.textContent = `${newCreateDateYear} `;
+      let createDateTime = e.createdAt.substr(11, 5);
+      const tdCreatedTime = document.createElement('span');
+      tdCreatedTime.classList.add('time');
+      tdCreatedTime.textContent = `${createDateTime}`;
+      const tdUpDate = document.createElement('td');
+      tdUpDate.classList.add('table__update');
+      const upDateYear = e.updatedAt;
+      let changeMonth = upDateYear.substr(5, 2);
+      let changeDay = upDateYear.substr(8, 2);
+      let changeYear = upDateYear.substr(0, 4);
+      let newUpDateYear = `${changeDay}.${changeMonth}.${changeYear}`;
+      tdUpDate.textContent = `${newUpDateYear} `;
+      let upDateTime = e.updatedAt.substr(11, 5);
+      const spanTime = document.createElement('span');
+      spanTime.classList.add('time');
+      spanTime.textContent = `${upDateTime}`;
 
-    const tdContact = document.createElement('td');
-    tdContact.classList.add('table__contact-client');
-    const tdAction = document.createElement('td');
-    tdAction.classList.add('table__action');
-    const changeBtn = document.createElement('button');
-    changeBtn.classList.add('table__change-btn');
-    changeBtn.textContent = 'Изменить';
-    const tableChangeImg = document.createElement('div');
-    tableChangeImg.classList.add('table__change-img', 'change-img');
-    tableChangeImg.setAttribute('tabindex', '0');
-    const removeBtn = document.createElement('button');
-    removeBtn.classList.add('table__remove-btn');
-    removeBtn.textContent = 'Удалить';
-    const tableRemoveBtn = document.createElement('div');
-    tableRemoveBtn.classList.add('table__change-img', 'remove-btn');
-    tableRemoveBtn.setAttribute('tabindex', '0');
+      const tdContact = document.createElement('td');
+      tdContact.classList.add('table__contact-client');
+      const tdAction = document.createElement('td');
+      tdAction.classList.add('table__action');
+      const changeBtn = document.createElement('button');
+      changeBtn.classList.add('table__change-btn');
+      changeBtn.textContent = 'Изменить';
+      const tableChangeImg = document.createElement('div');
+      tableChangeImg.classList.add('table__change-img', 'change-img');
+      tableChangeImg.setAttribute('tabindex', '0');
+      const removeBtn = document.createElement('button');
+      removeBtn.classList.add('table__remove-btn');
+      removeBtn.textContent = 'Удалить';
+      const tableRemoveBtn = document.createElement('div');
+      tableRemoveBtn.classList.add('table__change-img', 'remove-btn');
+      tableRemoveBtn.setAttribute('tabindex', '0');
 
-    container.append(tr);
-    tr.append(idClient);
-    tr.append(tdFullName);
-    tr.append(tdCreated);
-    tdCreated.append(tdCreatedTime);
-    tr.append(tdUpDate);
-    tdUpDate.append(spanTime);
-    tr.append(tdContact);
-    tr.append(tdAction);
-    tdAction.append(changeBtn);
-    changeBtn.append(tableChangeImg);
-    tdAction.append(removeBtn);
-    removeBtn.append(tableRemoveBtn);
+      container.append(tr);
+      tr.append(idClient);
+      tr.append(tdFullName);
+      tr.append(tdCreated);
+      tdCreated.append(tdCreatedTime);
+      tr.append(tdUpDate);
+      tdUpDate.append(spanTime);
+      tr.append(tdContact);
+      tr.append(tdAction);
+      tdAction.append(changeBtn);
+      changeBtn.append(tableChangeImg);
+      tdAction.append(removeBtn);
+      removeBtn.append(tableRemoveBtn);
 
-    if (e.contacts !== '') {
-      let icon = e.contacts;
-      icon.forEach(function (item) {
+      if (e.contacts !== '') {
+        let icon = e.contacts;
+        icon.forEach(function (item) {
 
-        if (item.type === 'Телефон') {
-          const divPhone = document.createElement('div');
-          divPhone.classList.add('wrapper__icon', 'icon__phone');
-          const imgPhone = document.createElement('img');
-          imgPhone.classList.add('icon', 'img__phone');
-          imgPhone.setAttribute('src', 'img/phone.png');
+          if (item.type === 'Телефон') {
+            const divPhone = document.createElement('div');
+            divPhone.classList.add('wrapper__icon', 'icon__phone');
+            const imgPhone = document.createElement('img');
+            imgPhone.classList.add('icon', 'img__phone');
+            imgPhone.setAttribute('src', 'img/phone.png');
 
-          const wrapperTooltipPhone = document.createElement('div');
-          wrapperTooltipPhone.classList.add('tooltip', 'tooltip__phone');
-          const arrowTooltipPhone = document.createElement('div');
-          arrowTooltipPhone.classList.add('arrow', 'arrow__phone');
-          const spanKeyPhone = document.createElement('span');
-          spanKeyPhone.classList.add('key', 'phone__key');
-          spanKeyPhone.textContent = `Телефон:`;
-          const spanValuePhone = document.createElement('a');
-          spanValuePhone.classList.add('value', 'phone__value');
-          spanValuePhone.setAttribute('href', `tel:${item.value}`);
-          spanValuePhone.textContent = `${item.value}`;
+            const wrapperTooltipPhone = document.createElement('div');
+            wrapperTooltipPhone.classList.add('tooltip', 'tooltip__phone');
+            const arrowTooltipPhone = document.createElement('div');
+            arrowTooltipPhone.classList.add('arrow', 'arrow__phone');
+            const spanKeyPhone = document.createElement('span');
+            spanKeyPhone.classList.add('key', 'phone__key');
+            spanKeyPhone.textContent = `Телефон:`;
+            const spanValuePhone = document.createElement('a');
+            spanValuePhone.classList.add('value', 'phone__value');
+            spanValuePhone.setAttribute('href', `tel:${item.value}`);
+            spanValuePhone.textContent = `${item.value}`;
 
-          tdContact.append(divPhone);
-          divPhone.append(wrapperTooltipPhone);
-          divPhone.append(arrowTooltipPhone);
-          divPhone.append(imgPhone);
-          wrapperTooltipPhone.append(spanKeyPhone);
-          wrapperTooltipPhone.append(spanValuePhone);
-        }
+            tdContact.append(divPhone);
+            divPhone.append(wrapperTooltipPhone);
+            divPhone.append(arrowTooltipPhone);
+            divPhone.append(imgPhone);
+            wrapperTooltipPhone.append(spanKeyPhone);
+            wrapperTooltipPhone.append(spanValuePhone);
+          }
 
-        if (item.type === 'Email') {
-          let divEmail = document.createElement('div');
-          divEmail.classList.add('wrapper__icon', 'icon__email');
-          const arrowTooltipEmail = document.createElement('div');
-          arrowTooltipEmail.classList.add('arrow', 'arrow__email');
-          let imgEmail = document.createElement('img');
-          imgEmail.classList.add('icon', 'img__email');
-          imgEmail.setAttribute('src', 'img/mail.png');
+          if (item.type === 'Email') {
+            let divEmail = document.createElement('div');
+            divEmail.classList.add('wrapper__icon', 'icon__email');
+            const arrowTooltipEmail = document.createElement('div');
+            arrowTooltipEmail.classList.add('arrow', 'arrow__email');
+            let imgEmail = document.createElement('img');
+            imgEmail.classList.add('icon', 'img__email');
+            imgEmail.setAttribute('src', 'img/mail.png');
 
-          const wrapperTooltipEmail = document.createElement('div');
-          wrapperTooltipEmail.classList.add('tooltip', 'tooltip__mail');
-          const spanKeyEmail = document.createElement('span');
-          spanKeyEmail.classList.add('key', 'mail__key');
-          spanKeyEmail.textContent = `Email:`;
-          const spanValueEmail = document.createElement('a');
-          spanValueEmail.classList.add('value', 'mail__value');
-          spanValueEmail.setAttribute('href', `mailto:${item.value}`);
-          spanValueEmail.textContent = `${item.value}`;
+            const wrapperTooltipEmail = document.createElement('div');
+            wrapperTooltipEmail.classList.add('tooltip', 'tooltip__mail');
+            const spanKeyEmail = document.createElement('span');
+            spanKeyEmail.classList.add('key', 'mail__key');
+            spanKeyEmail.textContent = `Email:`;
+            const spanValueEmail = document.createElement('a');
+            spanValueEmail.classList.add('value', 'mail__value');
+            spanValueEmail.setAttribute('href', `mailto:${item.value}`);
+            spanValueEmail.textContent = `${item.value}`;
 
-          tdContact.append(divEmail);
-          divEmail.append(wrapperTooltipEmail);
-          divEmail.append(arrowTooltipEmail);
-          divEmail.append(imgEmail);
-          wrapperTooltipEmail.append(spanKeyEmail);
-          wrapperTooltipEmail.append(spanValueEmail);
-        }
+            tdContact.append(divEmail);
+            divEmail.append(wrapperTooltipEmail);
+            divEmail.append(arrowTooltipEmail);
+            divEmail.append(imgEmail);
+            wrapperTooltipEmail.append(spanKeyEmail);
+            wrapperTooltipEmail.append(spanValueEmail);
+          }
 
-        if (item.type === 'Facebook') {
-          let divFacebook = document.createElement('div');
-          divFacebook.classList.add('wrapper__icon', 'icon__fb');
-          const arrowTooltipFacebook = document.createElement('div');
-          arrowTooltipFacebook.classList.add('arrow', 'arrow__fb');
-          let imgFacebook = document.createElement('img');
-          imgFacebook.classList.add('icon', 'img__fb');
-          imgFacebook.setAttribute('src', 'img/fb.png');
+          if (item.type === 'Facebook') {
+            let divFacebook = document.createElement('div');
+            divFacebook.classList.add('wrapper__icon', 'icon__fb');
+            const arrowTooltipFacebook = document.createElement('div');
+            arrowTooltipFacebook.classList.add('arrow', 'arrow__fb');
+            let imgFacebook = document.createElement('img');
+            imgFacebook.classList.add('icon', 'img__fb');
+            imgFacebook.setAttribute('src', 'img/fb.png');
 
-          const wrapperTooltipFacebook = document.createElement('div');
-          wrapperTooltipFacebook.classList.add('tooltip', 'tooltip__fb');
-          const spanKeyFacebook = document.createElement('span');
-          spanKeyFacebook.classList.add('key', 'fb__key');
-          spanKeyFacebook.textContent = `Facebook:`;
-          const spanValueFacebook = document.createElement('a');
-          spanValueFacebook.classList.add('value', 'fb__value');
-          spanValueFacebook.setAttribute('href', `http://www.facebook.com/profile.php?id=${item.value}`);
-          spanValueFacebook.textContent = `${item.value}`;
+            const wrapperTooltipFacebook = document.createElement('div');
+            wrapperTooltipFacebook.classList.add('tooltip', 'tooltip__fb');
+            const spanKeyFacebook = document.createElement('span');
+            spanKeyFacebook.classList.add('key', 'fb__key');
+            spanKeyFacebook.textContent = `Facebook:`;
+            const spanValueFacebook = document.createElement('a');
+            spanValueFacebook.classList.add('value', 'fb__value');
+            spanValueFacebook.setAttribute('href', `http://www.facebook.com/profile.php?id=${item.value}`);
+            spanValueFacebook.textContent = `${item.value}`;
 
-          tdContact.append(divFacebook);
-          divFacebook.append(wrapperTooltipFacebook);
-          divFacebook.append(arrowTooltipFacebook);
-          divFacebook.append(imgFacebook);
-          wrapperTooltipFacebook.append(spanKeyFacebook);
-          wrapperTooltipFacebook.append(spanValueFacebook);
-        }
+            tdContact.append(divFacebook);
+            divFacebook.append(wrapperTooltipFacebook);
+            divFacebook.append(arrowTooltipFacebook);
+            divFacebook.append(imgFacebook);
+            wrapperTooltipFacebook.append(spanKeyFacebook);
+            wrapperTooltipFacebook.append(spanValueFacebook);
+          }
 
-        if (item.type === 'Vk') {
-          let divVk = document.createElement('div');
-          divVk.classList.add('wrapper__icon', 'icon__vk');
-          const arrowTooltipVk = document.createElement('div');
-          arrowTooltipVk.classList.add('arrow', 'arrow__vk');
-          let imgVk = document.createElement('img');
-          imgVk.classList.add('icon', 'img__vk');
-          imgVk.setAttribute('src', 'img/vk.png');
+          if (item.type === 'Vk') {
+            let divVk = document.createElement('div');
+            divVk.classList.add('wrapper__icon', 'icon__vk');
+            const arrowTooltipVk = document.createElement('div');
+            arrowTooltipVk.classList.add('arrow', 'arrow__vk');
+            let imgVk = document.createElement('img');
+            imgVk.classList.add('icon', 'img__vk');
+            imgVk.setAttribute('src', 'img/vk.png');
 
-          const wrapperTooltipVk = document.createElement('div');
-          wrapperTooltipVk.classList.add('tooltip', 'tooltip__vk');
-          const spanKeyVk = document.createElement('span');
-          spanKeyVk.classList.add('key', 'vk__key');
-          spanKeyVk.textContent = `VK:`;
-          const spanValueVk = document.createElement('a');
-          spanValueVk.classList.add('value', 'vk__value');
-          spanValueVk.setAttribute('href', '');
-          spanValueVk.textContent = `${item.value}`;
+            const wrapperTooltipVk = document.createElement('div');
+            wrapperTooltipVk.classList.add('tooltip', 'tooltip__vk');
+            const spanKeyVk = document.createElement('span');
+            spanKeyVk.classList.add('key', 'vk__key');
+            spanKeyVk.textContent = `VK:`;
+            const spanValueVk = document.createElement('a');
+            spanValueVk.classList.add('value', 'vk__value');
+            spanValueVk.setAttribute('href', '');
+            spanValueVk.textContent = `${item.value}`;
 
-          tdContact.append(divVk);
-          divVk.append(wrapperTooltipVk);
-          divVk.append(arrowTooltipVk);
-          divVk.append(imgVk);
-          wrapperTooltipVk.append(spanKeyVk);
-          wrapperTooltipVk.append(spanValueVk);
-        }
+            tdContact.append(divVk);
+            divVk.append(wrapperTooltipVk);
+            divVk.append(arrowTooltipVk);
+            divVk.append(imgVk);
+            wrapperTooltipVk.append(spanKeyVk);
+            wrapperTooltipVk.append(spanValueVk);
+          }
 
-        if (item.type === 'Другое') {
-          let divOther = document.createElement('div');
-          divOther.classList.add('wrapper__icon', 'icon__other');
-          const arrowTooltipOther = document.createElement('div');
-          arrowTooltipOther.classList.add('arrow', 'arrow__other');
-          let imgOther = document.createElement('img');
-          imgOther.classList.add('icon', 'img__other');
-          imgOther.setAttribute('src', 'img/other.png');
+          if (item.type === 'Другое') {
+            let divOther = document.createElement('div');
+            divOther.classList.add('wrapper__icon', 'icon__other');
+            const arrowTooltipOther = document.createElement('div');
+            arrowTooltipOther.classList.add('arrow', 'arrow__other');
+            let imgOther = document.createElement('img');
+            imgOther.classList.add('icon', 'img__other');
+            imgOther.setAttribute('src', 'img/other.png');
 
-          const wrapperTooltipOther = document.createElement('div');
-          wrapperTooltipOther.classList.add('tooltip', 'tooltip__other');
-          const spanKeyOther = document.createElement('span');
-          spanKeyOther.classList.add('key', 'other__key');
-          spanKeyOther.textContent = `Другое:`;
-          const spanValueOther = document.createElement('a');
-          spanValueOther.classList.add('value', 'other__value');
-          spanValueOther.setAttribute('href', '');
-          spanValueOther.textContent = `${item.value}`;
+            const wrapperTooltipOther = document.createElement('div');
+            wrapperTooltipOther.classList.add('tooltip', 'tooltip__other');
+            const spanKeyOther = document.createElement('span');
+            spanKeyOther.classList.add('key', 'other__key');
+            spanKeyOther.textContent = `Другое:`;
+            const spanValueOther = document.createElement('a');
+            spanValueOther.classList.add('value', 'other__value');
+            spanValueOther.setAttribute('href', '');
+            spanValueOther.textContent = `${item.value}`;
 
-          tdContact.append(divOther);
-          divOther.append(wrapperTooltipOther);
-          divOther.append(arrowTooltipOther);
-          divOther.append(imgOther);
-          wrapperTooltipOther.append(spanKeyOther);
-          wrapperTooltipOther.append(spanValueOther);
-        }
-      })
-    }
-  }
-
-  //create change-client data modal(with a five second delay)
-  function createChangeModal() {
-
+            tdContact.append(divOther);
+            divOther.append(wrapperTooltipOther);
+            divOther.append(arrowTooltipOther);
+            divOther.append(imgOther);
+            wrapperTooltipOther.append(spanKeyOther);
+            wrapperTooltipOther.append(spanValueOther);
+          }
+        })
+      }
+    })
+    windowLoad();
+    deleteClient();
     document.querySelectorAll('.table__change-btn').forEach(function (element) {
       element.addEventListener('click', function (elem) {
-        animationChangeClient();
-
-        document.querySelector('.change__client-modal').classList.add('change__client-modal-visible');
-        const changeTitleId = document.querySelector('.change__title-id');
-        const changeSurName = document.querySelector('.input-change__surname');
-        const changeName = document.querySelector('.input-change__name');
-        const changeMiddleName = document.querySelector('.input-change__middle-name');
-
-        const id = elem.target.parentElement.parentElement.childNodes[0].dataset.id;
-        if (changeTitleId !== '') {
-          animationButton();
-        }
-
-        window.location.hash = `${id}`;
-
-        document.querySelector('.change__contact-save').classList.remove('load__show');
-        document.querySelector('.load__btn').remove();
-        fetch(`http://localhost:3000/api/clients/${id}`)
-          .then(response => {
-            response.json().then(data => {
-              let q = data.contacts;
-              document.querySelector('.wrapper__contact-change').classList.add('change-wrapper__contact-active');
-
-              changeTitleId.textContent = `ID: ${data.id}`;
-              changeSurName.value = `${data.surname}`;
-              changeName.value = `${data.name}`;
-              changeMiddleName.value = `${data.lastName}`;
-
-              if (q.length > 0) {
-                document.querySelector('.wrapper__contact-change').classList.add('change-wrapper__contact-active');
-                for (i = 0; i < q.length; i++) {
-                  createChangeDataClient();
-                  document.querySelectorAll('.change-data__btn').forEach(function (item) {
-                    item.addEventListener('click', function () {
-                      item.parentElement.remove();
-                    })
-                  })
-                  if (q[i].value === '') {
-                    return
-                  } else {
-                    document.querySelectorAll('.select__data')[i].textContent = q[i].type;
-                    document.querySelectorAll('.input__data')[i].value = `${q[i].value}`;
-                  }
-                }
-              }
-              show();
-              if (document.querySelector('.wrapper__change-modal').clientHeight > 639) {
-                document.querySelector('.wrapper__change-modal').classList.add('show-scroll');
-              }
-            })
-          })
+        const id = elem.currentTarget.parentElement.parentElement.childNodes[0].dataset.id;
+        createChangeModal(id);
       })
+    })
+    // })
+  }
+
+  //create change-client data modal
+  function createChangeModal(id) {
+    animationChangeClient();
+
+    document.querySelector('.change__client-modal').classList.add('change__client-modal-visible');
+    const changeTitleId = document.querySelector('.change__title-id');
+    const changeSurName = document.querySelector('.input-change__surname');
+    const changeName = document.querySelector('.input-change__name');
+    const changeMiddleName = document.querySelector('.input-change__middle-name');
+
+
+    if (changeTitleId !== '') {
+      animationButton();
+    }
+
+    window.location.hash = `${id}`;
+
+    document.querySelector('.change__contact-save').classList.remove('load__show');
+    document.querySelector('.load__btn').remove();
+
+    const data = loadFetchClient();
+
+    data.then(response => {
+      response.forEach(item => {
+        changeTitleId.textContent = `ID: ${item.id}`;
+        changeSurName.value = `${item.surname}`;
+        changeName.value = `${item.name}`;
+        changeMiddleName.value = `${item.lastName}`;
+
+        if (id === item.id) {
+          const contacts = item.contacts;
+          contacts.forEach(e => {
+            document.querySelector('.wrapper__contact-change').classList.add('change-wrapper__contact-active');
+            createChangeDataClient(e.type, e.value);
+            show();
+            if (document.querySelector('.wrapper__change-modal').clientHeight > 639) {
+              document.querySelector('.wrapper__change-modal').classList.add('show-scroll');
+            }
+          })
+        }
+      })
+
     })
 
     document.querySelector('.change__client-modal').addEventListener('click', (element) => {
@@ -882,6 +930,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.change__client-modal').classList.remove('change__client-modal-visible');
         document.querySelectorAll('.client__data').forEach(element => element.remove());
         if (!element.target.parentNode.parentNode.querySelector('.client__data')) {
+          element.preventDefault();
           document.querySelector('.wrapper__contact-change').classList.remove('change-wrapper__contact-active');
         }
 
@@ -893,15 +942,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelector('.change__contact-btn').addEventListener('click', function (e) {
       show();
-      createChangeDataClient();
+      createChangeDataClient(type = 'Телефон', val = '');
       show();
       document.querySelector('.wrapper__contact-change').classList.add('change-wrapper__contact-active');
-      document.querySelectorAll('.change-data__btn').forEach(function (item) {
-        item.addEventListener('click', function () {
-          item.parentElement.remove();
-        })
-      })
     });
+
   }
 
   //save change data in server
@@ -912,21 +957,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const item = element.target;
     const id = item.parentElement.parentElement.childNodes[0].childNodes[1].textContent.substr(4);
-    isCloseChange();
+
     const dataClient = createDataContacts();
     setTimeout(function () {
-      fetch(`http://localhost:3000/api/clients/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: `${name}`,
-          surname: `${surName}`,
-          lastName: `${middleName}`,
-          contacts: dataClient,
-        })
-      })
+      fetchClient(id, 'PATCH', name, surName, middleName, dataClient);
     }, 1000)
+    const wrapperChange = document.querySelector('.wrapper__change-modal');
+    isClose(wrapperChange);
   })
+
+  function fetchClient(id, methods, name, surName, middleName, dataClient) {
+    fetch(`http://localhost:3000/api/clients/${id}`, {
+      method: `${methods}`,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: `${name}`,
+        surname: `${surName}`,
+        lastName: `${middleName}`,
+        contacts: dataClient,
+      })
+    })
+  }
 
   //delete data client
   let removeIdClient;
@@ -945,7 +996,6 @@ document.addEventListener('DOMContentLoaded', function () {
           if (element.target == modal || element.target == cancel || element.target == close) {
             document.querySelector('.delete__client-modal').classList.remove('delete__visible-show');
             document.querySelector('.delete__client-modal').classList.remove('add__client-modal-visible');
-            window.location = window.location.href.substr(0, window.location.href.indexOf('#'));
           }
         });
 
@@ -953,10 +1003,9 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
     document.querySelector('.delete__client-btn').addEventListener('click', function (el) {
-      el.preventDefault();
       deleteFetchContact();
-      isCloseDelete();
-      // window.location = window.location.href.substr(0, window.location.href.indexOf('#'));
+      const wrapperDelete = document.querySelector('.wrapper__delete-modal');
+      isClose(wrapperDelete);
     })
   }
 
@@ -983,14 +1032,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (element.target === modal || element.target === cancel || element.target === close) {
         document.querySelector('.delete__client-modal').classList.remove('add__client-modal-visible');
-        window.location = window.location.href.substr(0, window.location.href.indexOf('#'));
       }
     });
 
-    document.querySelector('.delete__client-btn').addEventListener('click', function (el) {
-      el.preventDefault();
+    document.querySelector('.delete__client-btn').addEventListener('click', function () {
       deleteFetchContact();
-      isClose();
+      const wrapperDelete = document.querySelector('.wrapper__delete-modal');
+      isClose(wrapperDelete);
     });
   });
 
@@ -999,7 +1047,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelector('.header__input').addEventListener('input', function (element) {
       let str = element.currentTarget.value;
-      str = str.toUpperCase().substr(0, 1) + str.toLowerCase().substr(1, 9)
+      str = str.toUpperCase().substr(0, 1) + str.toLowerCase().substr(1, 9);
 
       const data = loadFetchClient();
 
@@ -1007,13 +1055,15 @@ document.addEventListener('DOMContentLoaded', function () {
         data.then(response => {
           response.forEach(function (element) {
             if (str === element.name || str === element.surname || str === element.lastName) {
+              let arr = [];
               if (element.id !== '') {
                 document.querySelectorAll('.row').forEach(e => e.remove());
 
                 let res = fetch(`http://localhost:3000/api/clients/${element.id}`);
                 res.then(data => {
                   data.json().then(result => {
-                    createTableData(result);
+                    arr.push(result)
+                    createTableData(arr);
                   })
                 });
               }
@@ -1032,165 +1082,105 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //sort table
   function sortData() {
-    document.querySelector('.td__id').addEventListener('click', function (e) {
-      const dataIdAttribute = document.querySelector('.td__id');
-
-      let data = loadFetchClient();
-      data.then(response => {
-
-        if (dataIdAttribute.dataset.id == 2) {
-          dataIdAttribute.setAttribute('data-id', '1');
-          let arraySort = sortId(response);
-          document.querySelectorAll('.row').forEach(e => e.remove());
-          for (i = 0; i < arraySort.length; i++) {
-            let set = arraySort[i];
-            createTableData(set);
+    document.querySelectorAll('.sort').forEach(function (e) {
+      e.addEventListener('click', function () {
+        let arr = [];
+        let data = loadFetchClient();
+        data.then(response => {
+          if (e.classList.contains('td__id')) {
+            if (e.dataset.id == 2) {
+              e.setAttribute('data-id', '1');
+              response.sort(sortId('id'));
+              for (i = 0; i < response.length; i++) {
+                let set = response[i];
+                arr.push(set);
+                document.querySelectorAll('.row').forEach(item => item.remove());
+                createTableData(arr);
+              }
+            } else if (e.dataset.id == 1) {
+              e.setAttribute('data-id', '2');
+              response.sort(sortIdReverse('id'));
+              for (i = 0; i < response.length; i++) {
+                let set = response[i];
+                arr.push(set);
+                document.querySelectorAll('.row').forEach(item => item.remove());
+                createTableData(arr);
+              }
+            }
+          } else if (e.classList.contains('full__name')) {
+            if (e.dataset.id == 2) {
+              e.setAttribute('data-id', '1');
+              response.sort(sortId('surname'));
+              for (i = 0; i < response.length; i++) {
+                let set = response[i];
+                arr.push(set);
+                document.querySelectorAll('.row').forEach(item => item.remove());
+                createTableData(arr);
+              }
+            } else if (e.dataset.id == 1) {
+              e.setAttribute('data-id', '2');
+              response.sort(sortIdReverse('surname'));
+              for (i = 0; i < response.length; i++) {
+                let set = response[i];
+                arr.push(set);
+                document.querySelectorAll('.row').forEach(item => item.remove());
+                createTableData(arr);
+              }
+            }
+          } else if (e.classList.contains('create__data')) {
+            if (e.dataset.id == 2) {
+              e.setAttribute('data-id', '1');
+              response.sort(sortId('createdAt'));
+              for (i = 0; i < response.length; i++) {
+                let set = response[i];
+                arr.push(set);
+                document.querySelectorAll('.row').forEach(item => item.remove());
+                createTableData(arr);
+              }
+            } else if (e.dataset.id == 1) {
+              e.setAttribute('data-id', '2');
+              response.sort(sortIdReverse('createdAt'));
+              for (i = 0; i < response.length; i++) {
+                let set = response[i];
+                arr.push(set);
+                document.querySelectorAll('.row').forEach(item => item.remove());
+                createTableData(arr);
+              }
+            }
+          } else if (e.classList.contains('change')) {
+            if (e.dataset.id == 2) {
+              e.setAttribute('data-id', '1');
+              response.sort(sortId('updatedAt'));
+              for (i = 0; i < response.length; i++) {
+                let set = response[i];
+                arr.push(set);
+                document.querySelectorAll('.row').forEach(item => item.remove());
+                createTableData(arr);
+              }
+            } else if (e.dataset.id == 1) {
+              e.setAttribute('data-id', '2');
+              response.sort(sortIdReverse('updatedAt'));
+              for (i = 0; i < response.length; i++) {
+                let set = response[i];
+                arr.push(set);
+                document.querySelectorAll('.row').forEach(item => item.remove());
+                createTableData(arr);
+              }
+            }
           }
-        } else if (dataIdAttribute.dataset.id == 1) {
-          dataIdAttribute.setAttribute('data-id', '2');
-          let arraySort = sortIdReverse(response);
-          document.querySelectorAll('.row').forEach(e => e.remove());
-          for (i = 0; i < arraySort.length; i++) {
-            let set = arraySort[i];
-            createTableData(set);
-          }
-        }
-        createChangeModal();
-        deleteClient();
-      })
-    })
 
-    document.querySelector('.full__name').addEventListener('click', function (e) {
-      const dataNameAttribute = document.querySelector('.full__name');
-
-      let data = loadFetchClient();
-      data.then(response => {
-
-        if (dataNameAttribute.dataset.id == 1) {
-          dataNameAttribute.setAttribute('data-id', '2');
-          let arraySort = sortName(response);
-          document.querySelectorAll('.row').forEach(e => e.remove());
-          for (i = 0; i < arraySort.length; i++) {
-            let set = arraySort[i];
-            createTableData(set);
-          }
-        } else if (dataNameAttribute.dataset.id == 2) {
-          dataNameAttribute.setAttribute('data-id', '1');
-          let arraySort = sortNameReverse(response);
-          document.querySelectorAll('.row').forEach(e => e.remove());
-          for (i = 0; i < arraySort.length; i++) {
-            let set = arraySort[i];
-            createTableData(set);
-          }
-        }
-        createChangeModal();
-        deleteClient();
-      })
-    })
-
-    document.querySelector('.create__data').addEventListener('click', function (e) {
-      const dataCreateAttribute = document.querySelector('.create__data');
-
-      let data = loadFetchClient();
-      data.then(response => {
-
-        if (dataCreateAttribute.dataset.id == 1) {
-          dataCreateAttribute.setAttribute('data-id', '2');
-          let arraySort = sortCreateData(response);
-          document.querySelectorAll('.row').forEach(e => e.remove());
-          for (i = 0; i < arraySort.length; i++) {
-            let set = arraySort[i];
-            createTableData(set);
-          }
-        } else if (dataCreateAttribute.dataset.id == 2) {
-          dataCreateAttribute.setAttribute('data-id', '1');
-          let arraySort = sortCreateDataReverse(response);
-          document.querySelectorAll('.row').forEach(e => e.remove());
-          for (i = 0; i < arraySort.length; i++) {
-            let set = arraySort[i];
-            createTableData(set);
-          }
-        }
-        createChangeModal();
-        deleteClient();
-      })
-    })
-
-    document.querySelector('.change').addEventListener('click', function (e) {
-      const dataChangeAttribute = document.querySelector('.change');
-      let data = loadFetchClient();
-      data.then(response => {
-
-        if (dataChangeAttribute.dataset.id == 1) {
-          dataChangeAttribute.setAttribute('data-id', '2');
-          let arraySort = sortChangeData(response);
-          document.querySelectorAll('.row').forEach(e => e.remove());
-          for (i = 0; i < arraySort.length; i++) {
-            let set = arraySort[i];
-            createTableData(set);
-          }
-        } else if (dataChangeAttribute.dataset.id == 2) {
-          dataChangeAttribute.setAttribute('data-id', '1');
-          let arraySort = sortChangeDataReverse(response);
-          document.querySelectorAll('.row').forEach(e => e.remove());
-          for (i = 0; i < arraySort.length; i++) {
-            let set = arraySort[i];
-            createTableData(set);
-          }
-        }
-        createChangeModal();
-        deleteClient();
+        })
       })
     })
   }
   sortData();
 
-  function sortId(item) {
-    const temp = JSON.parse(JSON.stringify(item));
-    temp.sort((a, b) => a.id > b.id ? 1 : -1);
-    return temp;
+  function sortId(field) {
+    return (a, b) => a[field] > b[field] ? 1 : -1;
   }
 
-  function sortIdReverse(item) {
-    const temp = JSON.parse(JSON.stringify(item));
-    temp.sort((a, b) => a.id < b.id ? 1 : -1);
-    return temp;
-  }
-
-  function sortName(item) {
-    const temp = JSON.parse(JSON.stringify(item));
-    temp.sort((a, b) => a.surname > b.surname ? 1 : -1);
-    return temp;
-  }
-
-  function sortNameReverse(item) {
-    const temp = JSON.parse(JSON.stringify(item));
-    temp.sort((a, b) => a.surname < b.surname ? 1 : -1);
-    return temp;
-  }
-
-  function sortCreateData(item) {
-    const temp = JSON.parse(JSON.stringify(item));
-    temp.sort((a, b) => new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1);
-    return temp;
-  }
-
-  function sortCreateDataReverse(item) {
-    const temp = JSON.parse(JSON.stringify(item));
-    temp.sort((a, b) => new Date(a.createdAt) < new Date(b.createdAt) ? 1 : -1);
-    return temp;
-  }
-
-  function sortChangeData(item) {
-    const temp = JSON.parse(JSON.stringify(item));
-    temp.sort((a, b) => new Date(a.updatedAt) > new Date(b.updatedAt) ? 1 : -1);
-    return temp;
-  }
-
-  function sortChangeDataReverse(item) {
-    const temp = JSON.parse(JSON.stringify(item));
-    temp.sort((a, b) => new Date(a.updatedAt) < new Date(b.updatedAt) ? 1 : -1);
-    return temp;
+  function sortIdReverse(field) {
+    return (a, b) => a[field] < b[field] ? 1 : -1;
   }
 
   document.querySelectorAll("td").forEach(function (elem) {
@@ -1256,63 +1246,15 @@ document.addEventListener('DOMContentLoaded', function () {
     data.then(response => {
       response.forEach(function (e) {
         let id = window.location.hash.substr(-13, 13);
+        let url = window.location.host;
 
-        if (window.location == `http://127.0.0.1:5501/#${e.id}`) {
-          animationChangeClient();
-
-          document.querySelector('.change__client-modal').classList.add('change__client-modal-visible');
-          const changeTitleId = document.querySelector('.change__title-id');
-          const changeSurName = document.querySelector('.input-change__surname');
-          const changeName = document.querySelector('.input-change__name');
-          const changeMiddleName = document.querySelector('.input-change__middle-name');
-
-          if (changeTitleId !== '') {
-            animationButton();
-          }
-
-          document.querySelector('.change__contact-save').classList.remove('load__show');
-          document.querySelector('.load__btn').remove();
-          fetch(`http://localhost:3000/api/clients/${id}`)
-            .then(response => {
-              response.json().then(data => {
-                let q = data.contacts;
-                document.querySelector('.wrapper__contact-change').classList.add('change-wrapper__contact-active');
-
-                changeTitleId.textContent = `ID: ${data.id}`;
-                changeSurName.value = `${data.surname}`;
-                changeName.value = `${data.name}`;
-                changeMiddleName.value = `${data.lastName}`;
-
-                if (q.length > 0) {
-                  document.querySelector('.wrapper__contact-change').classList.add('change-wrapper__contact-active');
-                  for (i = 0; i < q.length; i++) {
-                    createChangeDataClient();
-                    document.querySelectorAll('.change-data__btn').forEach(function (item) {
-                      item.addEventListener('click', function () {
-                        item.parentElement.remove();
-                      })
-                    })
-                    if (q[i].value === '') {
-                      return
-                    } else {
-                      document.querySelectorAll('.select__data')[i].textContent = q[i].type;
-                      document.querySelectorAll('.input__data')[i].value = `${q[i].value}`;
-                    }
-                  }
-                }
-                show();
-                if (document.querySelector('.wrapper__change-modal').clientHeight > 639) {
-                  document.querySelector('.wrapper__change-modal').classList.add('show-scroll');
-                }
-              })
-            })
+        if (window.location == `http://${url}/#${e.id}`) {
+          createChangeModal(id);
         }
       })
     })
-
   }
   linkContact();
-
 
   //additionalTaskThree
   function errorName(element) {
@@ -1350,25 +1292,10 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.append(load);
   }
 
-  function isClose() {
-    const wrapper = document.querySelector('.wrapper__add-modal');
+  function isClose(item) {
     const close = document.createElement('div');
     close.classList.add('is-close');
-    wrapper.append(close);
-  }
-
-  function isCloseChange() {
-    const wrapper = document.querySelector('.wrapper__change-modal');
-    const close = document.createElement('div');
-    close.classList.add('is-close-change');
-    wrapper.append(close);
-  }
-
-  function isCloseDelete() {
-    const wrapper = document.querySelector('.wrapper__delete-modal');
-    const close = document.createElement('div');
-    close.classList.add('is-close');
-    wrapper.append(close);
+    item.append(close);
   }
 
   //additionalTaskFive
@@ -1416,7 +1343,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let id = e.currentTarget.innerHTML.substr(-13, 13);
         let table = document.querySelectorAll('.table__id');
         table.forEach(e => {
-          console.log(e)
           if (e.dataset.id === id) {
             e.parentElement.style.border = '1px solid red';
             e.parentElement.style.backgroundColor = 'green';
@@ -1435,5 +1361,4 @@ document.addEventListener('DOMContentLoaded', function () {
       })
     })
   }
-
 });
