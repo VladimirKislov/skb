@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     vector1.setAttribute('src', 'img/Vector.png');
     thId.setAttribute('tabindex', '0');
     thId.setAttribute('data-id', '1');
+    thId.setAttribute('data-sort', 'id');
     thId.textContent = 'ID';
     const fullName = document.createElement('td');
     fullName.classList.add('sort', 'full__name');
@@ -62,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
     text.classList.add('sort__text');
     text.textContent = 'А-Я';
     fullName.setAttribute('data-id', '1');
+    fullName.setAttribute('data-sort', 'surname');
     fullName.setAttribute('tabindex', '0');
     const createData = document.createElement('td');
     createData.classList.add('sort', 'create__data');
@@ -71,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
     vector3.setAttribute('src', 'img/Vector.png');
     createData.setAttribute('data-id', '1');
     createData.setAttribute('tabindex', '0');
+    createData.setAttribute('data-sort', 'createdAt');
     const change = document.createElement('td');
     change.classList.add('sort', 'change');
     change.textContent = 'Последние изменения';
@@ -78,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
     vector4.classList.add('vector', 'vector4');
     vector4.setAttribute('src', 'img/Vector.png');
     change.setAttribute('data-id', '1');
+    change.setAttribute('data-sort', 'updatedAt');
     change.setAttribute('tabindex', '0');
     const contact = document.createElement('td');
     contact.classList.add('contact');
@@ -401,6 +405,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (element.target === modal || element.target === cancel || element.target === close) {
       document.querySelectorAll('.error-valid').forEach(e => e.classList.remove('error-valid'));
       document.querySelector('.wrapper__add-modal').classList.remove('show-scroll');
+      if (document.querySelector('.is-close')) {
+        document.querySelector('.is-close').remove();
+      }
       if (error !== null) {
         error.innerHTML = '';
       }
@@ -558,13 +565,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //show table
   function showTable() {
+    document.querySelectorAll('.row').forEach(item => item.remove());
     const data = loadFetchClient();
     data.then(response => {
       if (response.length > 0) {
         createTableData(response);
       } else {
         windowLoad();
-        deleteClient();
       }
     })
   }
@@ -580,7 +587,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   //save contact (send in server)
-  function saveContact() {
+  async function saveContact() {
     let inputName = document.querySelector('.input__name');
     let inputSurName = document.querySelector('.input__surname');
     let inputMiddleName = document.querySelector('.input__middle-name');
@@ -617,14 +624,20 @@ document.addEventListener('DOMContentLoaded', function () {
           arrayData = [];
         } else {
           createFetchClient();
+          document.querySelectorAll('.row').forEach(item => item.remove());
+          showTable();
           const wrapperAdd = document.querySelector('.wrapper__add-modal');
           isClose(wrapperAdd);
+          // document.querySelector('.add__client-modal').classList.remove('add__client-modal-visible');
         }
       }
     } else {
       createFetchClient();
+      document.querySelectorAll('.row').forEach(item => item.remove());
+      showTable();
       const wrapperAdd = document.querySelector('.wrapper__add-modal');
       isClose(wrapperAdd);
+      // document.querySelector('.add__client-modal').classList.remove('add__client-modal-visible');
     }
   }
 
@@ -646,9 +659,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const middleName = document.querySelector('.input__middle-name').value;
     const dataClient = createDataContacts();
     const id = '';
-    setTimeout(function () {
-      fetchClient(id, 'POST', name, surName, middleName, dataClient);
-    }, 1000);
+    fetchClient(id, 'POST', name, surName, middleName, dataClient);
   }
 
   function createTableData(el) {
@@ -869,7 +880,6 @@ document.addEventListener('DOMContentLoaded', function () {
         createChangeModal(id);
       })
     })
-    // })
   }
 
   //create change-client data modal
@@ -893,15 +903,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('.load__btn').remove();
 
     const data = loadFetchClient();
-
     data.then(response => {
       response.forEach(item => {
-        changeTitleId.textContent = `ID: ${item.id}`;
-        changeSurName.value = `${item.surname}`;
-        changeName.value = `${item.name}`;
-        changeMiddleName.value = `${item.lastName}`;
-
         if (id === item.id) {
+          changeTitleId.textContent = `ID: ${item.id}`;
+          changeSurName.value = `${item.surname}`;
+          changeName.value = `${item.name}`;
+          changeMiddleName.value = `${item.lastName}`;
+
           const contacts = item.contacts;
           contacts.forEach(e => {
             document.querySelector('.wrapper__contact-change').classList.add('change-wrapper__contact-active');
@@ -940,7 +949,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-    document.querySelector('.change__contact-btn').addEventListener('click', function (e) {
+    document.querySelector('.change__contact-btn').addEventListener('click', function () {
       show();
       createChangeDataClient(type = 'Телефон', val = '');
       show();
@@ -959,11 +968,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const id = item.parentElement.parentElement.childNodes[0].childNodes[1].textContent.substr(4);
 
     const dataClient = createDataContacts();
-    setTimeout(function () {
-      fetchClient(id, 'PATCH', name, surName, middleName, dataClient);
-    }, 1000)
+    fetchClient(id, 'PATCH', name, surName, middleName, dataClient);
     const wrapperChange = document.querySelector('.wrapper__change-modal');
     isClose(wrapperChange);
+    document.querySelectorAll('.row').forEach(item => item.remove());
+    showTable();
+    // document.querySelector('.change__client-modal').classList.remove('change__client-modal-visible')
   })
 
   function fetchClient(id, methods, name, surName, middleName, dataClient) {
@@ -982,6 +992,12 @@ document.addEventListener('DOMContentLoaded', function () {
   //delete data client
   let removeIdClient;
 
+  function deleteFetchContact() {
+    fetch(`http://localhost:3000/api/clients/${removeIdClient}`, {
+      method: 'DELETE',
+    })
+  }
+
   function deleteClient() {
     document.querySelectorAll('.table__remove-btn').forEach(function (elem) {
       elem.addEventListener('click', function (e) {
@@ -998,22 +1014,12 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('.delete__client-modal').classList.remove('add__client-modal-visible');
           }
         });
-
+        del();
       })
     })
-
-    document.querySelector('.delete__client-btn').addEventListener('click', function (el) {
-      deleteFetchContact();
-      const wrapperDelete = document.querySelector('.wrapper__delete-modal');
-      isClose(wrapperDelete);
-    })
   }
 
-  function deleteFetchContact() {
-    fetch(`http://localhost:3000/api/clients/${removeIdClient}`, {
-      method: 'DELETE',
-    })
-  }
+
 
   function modalRemove() {
     document.querySelector('.delete__client-modal').classList.add('add__client-modal-visible');
@@ -1034,13 +1040,28 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.delete__client-modal').classList.remove('add__client-modal-visible');
       }
     });
+    del();
+    // document.querySelector('.delete__client-btn').addEventListener('click', function () {
+    //   deleteFetchContact();
+    //   const wrapperDelete = document.querySelector('.wrapper__delete-modal');
+    //   isClose(wrapperDelete);
+    //   document.querySelectorAll('.row').forEach(item => item.remove());
+    //   showTable();
+    //   document.querySelector('.delete__client-modal').classList.remove('add__client-modal-visible');
+    // });
+  });
 
+  function del() {
     document.querySelector('.delete__client-btn').addEventListener('click', function () {
       deleteFetchContact();
       const wrapperDelete = document.querySelector('.wrapper__delete-modal');
       isClose(wrapperDelete);
-    });
-  });
+      document.querySelectorAll('.row').forEach(item => item.remove());
+      showTable();
+      document.querySelector('.delete__client-modal').classList.remove('add__client-modal-visible');
+    })
+  }
+
 
   //search client
   function searchClient() {
@@ -1084,91 +1105,29 @@ document.addEventListener('DOMContentLoaded', function () {
   function sortData() {
     document.querySelectorAll('.sort').forEach(function (e) {
       e.addEventListener('click', function () {
+        let dataElement = e.dataset.sort;
         let arr = [];
         let data = loadFetchClient();
         data.then(response => {
-          if (e.classList.contains('td__id')) {
-            if (e.dataset.id == 2) {
-              e.setAttribute('data-id', '1');
-              response.sort(sortId('id'));
-              for (i = 0; i < response.length; i++) {
-                let set = response[i];
-                arr.push(set);
-                document.querySelectorAll('.row').forEach(item => item.remove());
-                createTableData(arr);
-              }
-            } else if (e.dataset.id == 1) {
-              e.setAttribute('data-id', '2');
-              response.sort(sortIdReverse('id'));
-              for (i = 0; i < response.length; i++) {
-                let set = response[i];
-                arr.push(set);
-                document.querySelectorAll('.row').forEach(item => item.remove());
-                createTableData(arr);
-              }
+          if (e.dataset.id === '2') {
+            e.setAttribute('data-id', '1');
+            response.sort(sortId(`${dataElement}`));
+            for (i = 0; i < response.length; i++) {
+              let set = response[i];
+              arr.push(set);
+              document.querySelectorAll('.row').forEach(item => item.remove());
+              createTableData(arr);
             }
-          } else if (e.classList.contains('full__name')) {
-            if (e.dataset.id == 2) {
-              e.setAttribute('data-id', '1');
-              response.sort(sortId('surname'));
-              for (i = 0; i < response.length; i++) {
-                let set = response[i];
-                arr.push(set);
-                document.querySelectorAll('.row').forEach(item => item.remove());
-                createTableData(arr);
-              }
-            } else if (e.dataset.id == 1) {
-              e.setAttribute('data-id', '2');
-              response.sort(sortIdReverse('surname'));
-              for (i = 0; i < response.length; i++) {
-                let set = response[i];
-                arr.push(set);
-                document.querySelectorAll('.row').forEach(item => item.remove());
-                createTableData(arr);
-              }
-            }
-          } else if (e.classList.contains('create__data')) {
-            if (e.dataset.id == 2) {
-              e.setAttribute('data-id', '1');
-              response.sort(sortId('createdAt'));
-              for (i = 0; i < response.length; i++) {
-                let set = response[i];
-                arr.push(set);
-                document.querySelectorAll('.row').forEach(item => item.remove());
-                createTableData(arr);
-              }
-            } else if (e.dataset.id == 1) {
-              e.setAttribute('data-id', '2');
-              response.sort(sortIdReverse('createdAt'));
-              for (i = 0; i < response.length; i++) {
-                let set = response[i];
-                arr.push(set);
-                document.querySelectorAll('.row').forEach(item => item.remove());
-                createTableData(arr);
-              }
-            }
-          } else if (e.classList.contains('change')) {
-            if (e.dataset.id == 2) {
-              e.setAttribute('data-id', '1');
-              response.sort(sortId('updatedAt'));
-              for (i = 0; i < response.length; i++) {
-                let set = response[i];
-                arr.push(set);
-                document.querySelectorAll('.row').forEach(item => item.remove());
-                createTableData(arr);
-              }
-            } else if (e.dataset.id == 1) {
-              e.setAttribute('data-id', '2');
-              response.sort(sortIdReverse('updatedAt'));
-              for (i = 0; i < response.length; i++) {
-                let set = response[i];
-                arr.push(set);
-                document.querySelectorAll('.row').forEach(item => item.remove());
-                createTableData(arr);
-              }
+          } else if (e.dataset.id === '1') {
+            e.setAttribute('data-id', '2');
+            response.sort(sortIdReverse(`${dataElement}`));
+            for (i = 0; i < response.length; i++) {
+              let set = response[i];
+              arr.push(set);
+              document.querySelectorAll('.row').forEach(item => item.remove());
+              createTableData(arr);
             }
           }
-
         })
       })
     })
